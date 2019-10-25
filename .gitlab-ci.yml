@@ -1,0 +1,76 @@
+include:
+  - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/container_scan-v2.yml
+
+stages:
+  - download
+  - build
+  - containerize
+  - scan
+
+download:
+  stage: download
+  image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
+  script:
+    - HTML=$(wget -qO - https://github.com/ruby/ruby/releases)
+    - VERSION=$(echo ${HTML} | grep -oP 'v2_6_(\d)' | awk 'NR==1{print $1}')
+    - NICE_VERSION=$(echo ${VERSION} | sed -r 's/_/./g')
+    - printf ${NICE_VERSION} > version.txt
+    - wget https://github.com/ruby/ruby/archive/${VERSION}.tar.gz -O ruby.tar.gz
+  artifacts:
+    paths:
+      - ruby.tar.gz
+      - version.txt
+
+.build:src:
+  needs:
+    - download
+  stage: build
+  image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
+  before_script:
+    - apk add --no-cache autoconf gcc musl-dev build-base binutils-gold ruby zlib-dev openssl-dev ncurses-dev readline-dev libxml2-dev libxslt-dev linux-headers dpkg-dev ca-certificates bison gdbm-dev yaml-dev libffi-dev make git
+    - mkdir src out/${DOCKER_ARCH}
+  script:
+    - tar -xzhf ruby.tar.gz -C src/ --strip-components=1
+    - cd src
+    - autoconf
+    - ./configure --prefix=/usr/local --enable-load-relative --host="$${ARCH}-linux-musl" --disable-install-doc --enable-shared
+    - make
+    - make install
+    - $(cd /usr/local && tar -czf /tmp/ruby.tar.gz)
+    - mv version.txt out/version.txt
+    - mv /tmp/ruby.tar.gz out/${DOCKER_ARCH}/ruby.tar.gz
+  artifacts:
+    paths:
+      - out/
+    expire_in: 1 hour
+
+build:src:amd64:
+  extends: .build:src
+  variables:
+    DOCKER_ARCH: "amd64"
+    ARCH: "x86_64"
+
+build:src:arm64:
+  extends: .build:src
+  variables:
+    DOCKER_ARCH: "arm64"
+    ARCH: "aarch64"
+  tags:
+    - native-aarch64
+
+containerize:
+  stage: containerize
+  needs:
+    - build:src:amd64
+    - build:src:arm64
+  image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
+  script:
+    - VERSION=$(cat version.txt)
+    - TAGS=$(helper "${CI_IMAGE_NAME},jitesoft/ruby" "${VERSION},latest")
+    - docker buildx build --platform linux/arm64,linux/amd64 --progress plain --push ${TAGS} --build-arg VERSION=${VERSION} .
+
+scan:bionic:
+  extends: .container_scanning
+  variables:
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:latest"
+    GIT_STRATEGY: none
