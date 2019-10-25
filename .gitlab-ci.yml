@@ -28,19 +28,26 @@ download:
   stage: build
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
   before_script:
-    - apk add --no-cache autoconf gcc musl-dev build-base binutils-gold ruby zlib-dev openssl-dev ncurses-dev readline-dev libxml2-dev libxslt-dev linux-headers dpkg-dev ca-certificates bison gdbm-dev yaml-dev libffi-dev make git
+    - apk add --no-cache autoconf gcc musl-dev build-base binutils-gold ruby zlib-dev openssl-dev ncurses-dev readline-dev libxml2-dev libxslt-dev linux-headers dpkg-dev ca-certificates bison gdbm-dev yaml-dev libffi-dev make git ccache
     - mkdir -p src out/${DOCKER_ARCH}
   script:
+    - export PATH="/usr/lib/ccache/bin:$PATH"
     - tar -xzhf ruby.tar.gz -C src/ --strip-components=1
     - cd src
+    - ccache -s
     - autoconf
     - ./configure --prefix=/usr/local --enable-load-relative --host="${ARCH}-linux-musl" --disable-install-doc --enable-shared
     - make
     - make install
+    - ccache -s
     - $(cd /usr/local && tar -czf /tmp/ruby.tar.gz *)
     - cd ..
     - mv version.txt out/version.txt
     - mv /tmp/ruby.tar.gz out/${DOCKER_ARCH}/ruby.tar.gz
+  cache:
+    paths:
+      - ccache/
+    key: ruby.build.ccache-${DOCKER_ARCH}
   artifacts:
     paths:
       - out/
@@ -51,12 +58,14 @@ build:src:amd64:
   variables:
     DOCKER_ARCH: "amd64"
     ARCH: "x86_64"
+    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
 
 build:src:arm64:
   extends: .build:src
   variables:
     DOCKER_ARCH: "arm64"
     ARCH: "aarch64"
+    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
   tags:
     - native-aarch64
 
