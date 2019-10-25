@@ -11,6 +11,7 @@ download:
   stage: download
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
   script:
+    - apk add --no-cache grep sed
     - HTML=$(wget -qO - https://github.com/ruby/ruby/releases)
     - VERSION=$(echo ${HTML} | grep -oP 'v2_6_(\d)' | awk 'NR==1{print $1}')
     - NICE_VERSION=$(echo ${VERSION} | sed -r 's/_/./g')
