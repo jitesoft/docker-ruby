@@ -34,7 +34,7 @@ download:
     - tar -xzhf ruby.tar.gz -C src/ --strip-components=1
     - cd src
     - autoconf
-    - ./configure --prefix=/usr/local --enable-load-relative --host="$${ARCH}-linux-musl" --disable-install-doc --enable-shared
+    - ./configure --prefix=/usr/local --enable-load-relative --host="${ARCH}-linux-musl" --disable-install-doc --enable-shared
     - make
     - make install
     - $(cd /usr/local && tar -czf /tmp/ruby.tar.gz)
