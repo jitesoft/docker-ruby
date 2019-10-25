@@ -17,8 +17,8 @@ ENV GEM_HOME="usr/local/bundle" \
     BUNDLE_APP_CONFIG="/usr/local/bundle" \
     PATH="/usr/local/buundle/bin:/usr/local/bundle/gems/bin:${PATH}"
 
-RUN --mount=type=bind,source=./bin,target=/tmp \
- tar -xzhf /tmp/ruby-${TARGETARCH}.tar.gz -C /usr \
+RUN --mount=type=bind,source=./out,target=/tmp \
+ tar -xzhf /tmp/${TARGETARCH}/ruby.tar.gz -C /usr \
  && mkdir -p ${GEM_HOME} \
  && chmod 777 ${GEM_HOME} \
  && dependencies="$( \
