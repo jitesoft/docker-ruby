@@ -18,7 +18,7 @@ Each image is built for the following architectures: `amd64/x86_64`, `arm64/aarc
 
 ### GitLab
 
-* `registry.gitlab.com/jitesoft/dockerfiles/ubuntu`
+* `registry.gitlab.com/jitesoft/dockerfiles/ruby`
     * `latest`, `v2.6`, `v2.6.5`
     
 
