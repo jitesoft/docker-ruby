@@ -37,7 +37,7 @@ download:
     - ./configure --prefix=/usr/local --enable-load-relative --host="${ARCH}-linux-musl" --disable-install-doc --enable-shared
     - make
     - make install
-    - $(cd /usr/local && tar -czf /tmp/ruby.tar.gz)
+    - $(cd /usr/local && tar -czf /tmp/ruby.tar.gz *)
     - mv version.txt out/version.txt
     - mv /tmp/ruby.tar.gz out/${DOCKER_ARCH}/ruby.tar.gz
   artifacts:
