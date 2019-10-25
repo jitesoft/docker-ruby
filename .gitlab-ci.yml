@@ -38,6 +38,7 @@ download:
     - make
     - make install
     - $(cd /usr/local && tar -czf /tmp/ruby.tar.gz *)
+    - cd ..
     - mv version.txt out/version.txt
     - mv /tmp/ruby.tar.gz out/${DOCKER_ARCH}/ruby.tar.gz
   artifacts:
