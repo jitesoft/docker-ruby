@@ -31,6 +31,10 @@ download:
     - apk add --no-cache autoconf gcc musl-dev build-base binutils-gold ruby zlib-dev openssl-dev ncurses-dev readline-dev libxml2-dev libxslt-dev linux-headers dpkg-dev ca-certificates bison gdbm-dev yaml-dev libffi-dev make git ccache
     - mkdir -p src out/${DOCKER_ARCH}
   script:
+    - mkdir -p /usr/local/etc
+    - |
+      echo 'install: --no-document' >> /usr/local/etc/gemrc;
+      echo 'update: --no-document' >> /usr/local/etc/gemrc;
     - export PATH="/usr/lib/ccache/bin:$PATH"
     - tar -xzhf ruby.tar.gz -C src/ --strip-components=1
     - cd src
