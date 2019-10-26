@@ -87,8 +87,9 @@ containerize:
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   script:
     - VERSION=$(cat out/version.txt)
-    - VERSION_SHORT=$(echo ${VERSION} | cut -d'.' -f1)
-    - TAGS=$(helper "${CI_IMAGE_NAME},jitesoft/ruby" "${VERSION},latest,${VERSION_SHORT}")
+    - VERSION_SHORT=$(echo ${VERSION} | cut -d'.' -f1-2)
+    - VERSION_SHORTER=$(echo ${VERSION} | cut -d'.' -f1)
+    - TAGS=$(helper "${CI_IMAGE_NAME},jitesoft/ruby" "${VERSION},latest,${VERSION_SHORT},${VERSION_SHORTER}")
     - docker buildx build --platform linux/arm64,linux/amd64 --progress plain --push ${TAGS} --build-arg VERSION=${VERSION} .
 
 scan:bionic:
