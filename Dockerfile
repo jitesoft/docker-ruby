@@ -11,6 +11,7 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.app.ruby.version="${VERSION}"
 
 ARG TARGETARCH
+ARG BUILDARCH
 
 ENV GEM_HOME="usr/local/bundle" \
     BUNDLE_PATH="/usr/local/bundle" \
@@ -19,8 +20,9 @@ ENV GEM_HOME="usr/local/bundle" \
 
 RUN --mount=type=bind,source=./out,target=/tmp/binary \
  tar -xzhf /tmp/binary/${TARGETARCH}/ruby.tar.gz -C /usr \
+ && echo "Target: ${TARGETARCH} Build: ${BUILDARCH}" \
  && mkdir -p ${GEM_HOME} \
- && chmod 777 ${GEM_HOME} \
+ && chmod -R 777 ${GEM_HOME} \
  && dependencies="$( \
       scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
       | tr ',' '\n' \
