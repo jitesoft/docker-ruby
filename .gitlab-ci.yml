@@ -69,6 +69,8 @@ build:src:amd64:
     DOCKER_ARCH: "amd64"
     ARCH: "x86_64"
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
+  tags:
+    - native-amd64
 
 build:src:arm64:
   extends: .build:src
@@ -91,6 +93,10 @@ containerize:
     - VERSION_SHORTER=$(echo ${VERSION} | cut -d'.' -f1)
     - TAGS=$(helper "${CI_REGISTRY_IMAGE},jitesoft/ruby" "${VERSION},latest,${VERSION_SHORT},${VERSION_SHORTER}")
     - docker buildx build --platform linux/arm64,linux/amd64 --progress plain --push ${TAGS} --build-arg VERSION=${VERSION} .
+  tags:
+    - buildx
+    - jitesoft
+    - protected
 
 scan:bionic:
   extends: .container_scanning

@@ -22,7 +22,7 @@ RUN --mount=type=bind,source=./out,target=/tmp/binary \
  tar -xzhf /tmp/binary/${TARGETARCH}/ruby.tar.gz -C /usr \
  && echo "Target: ${TARGETARCH} Build: ${BUILDARCH}" \
  && mkdir -p ${GEM_HOME} \
- && chmod -R 777 ${GEM_HOME} \
+ && chmod 777 ${GEM_HOME} \
  && dependencies="$( \
       scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
       | tr ',' '\n' \
