@@ -97,11 +97,15 @@ containerize:
     - buildx
     - jitesoft
     - protected
+  artifacts:
+    paths:
+      - out/version.txt
+    expire_in: 1 hour
 
 scan:
   extends: .container_scanning
   needs:
-    - download
+    - containerize
   before_script:
     - VERSION=$(cat out/version.txt)
     - export SCANNING_IMAGE_NAME="${CI_REGISTRY_IMAGE}:${VERSION}"
