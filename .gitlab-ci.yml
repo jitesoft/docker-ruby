@@ -26,7 +26,7 @@ download:
   needs:
     - download
   stage: build
-  image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
+  image: registry.gitlab.com/jitesoft/dockerfiles/alpine:3.11 # For now, 3.11
   before_script:
     - apk add --no-cache autoconf gcc musl-dev build-base binutils-gold ruby zlib-dev openssl-dev ncurses-dev readline-dev libxml2-dev glib-dev libc-dev libxslt-dev linux-headers dpkg-dev ca-certificates bison gdbm-dev yaml-dev libffi-dev make git ccache g++
     - mkdir -p src out/${DOCKER_ARCH}
