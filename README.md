@@ -2,7 +2,6 @@
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/jitesoft/ruby.svg)](https://hub.docker.com/r/jitesoft/ruby)
 [![Back project](https://img.shields.io/badge/Open%20Collective-Tip%20the%20devs!-blue.svg)](https://opencollective.com/jitesoft-open-source)
-[![pipeline status](https://gitlab.com/jitesoft/dockerfiles/ruby/badges/master/pipeline.svg)](https://gitlab.com/jitesoft/dockerfiles/ruby/commits/master)
 
 Dockerfile with alpine linux and ruby built from source.
 
@@ -12,15 +11,12 @@ Tags are named after ruby version.
 
 Each image is built for the following architectures: `amd64/x86_64`, `arm64/aarch64`
 
-### Docker Hub
 
-* `latest`, `v2.6`, `v2.6.5`
+Images can be found at:
 
-### GitLab
-
-* `registry.gitlab.com/jitesoft/dockerfiles/ruby`
-    * `latest`, `v2.6`, `v2.6.5`
-    
+* [Docker hub](https://hub.docker.com/r/jitesoft/ruby): `jitesoft/ruby`  
+* [GitLab](https://gitlab.com/jitesoft/dockerfiles/ruby): `registry.gitlab.com/jitesoft/dockerfiles/ruby`
+* [GitHub](https://github.com/orgs/jitesoft/packages/container/package/ruby): `ghcr.io/jitesoft/ruby`
 
 ## Dockerfile
 

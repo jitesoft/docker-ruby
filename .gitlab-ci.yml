@@ -1,5 +1,6 @@
 include:
-  - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/Scan/trivy.yml
+  - file: /Scan/trivy.yml
+    project: jitesoft/gitlab-ci-lib
 
 stages:
   - download
@@ -91,7 +92,7 @@ containerize:
     - VERSION=$(cat out/version.txt)
     - VERSION_SHORT=$(echo ${VERSION} | cut -d'.' -f1-2)
     - VERSION_SHORTER=$(echo ${VERSION} | cut -d'.' -f1)
-    - TAGS=$(helper "${CI_REGISTRY_IMAGE},jitesoft/ruby" "${VERSION},latest,${VERSION_SHORT},${VERSION_SHORTER}")
+    - TAGS=$(helper "${CI_REGISTRY_IMAGE},ghcr.io/jitesoft/ruby,jitesoft/ruby" "${VERSION},latest,${VERSION_SHORT},${VERSION_SHORTER}")
     - docker buildx build --platform linux/arm64,linux/amd64 --progress plain --push ${TAGS} --build-arg VERSION=${VERSION} .
   tags:
     - buildx
